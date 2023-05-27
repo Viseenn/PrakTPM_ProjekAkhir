@@ -3,7 +3,6 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:project_visen/model/userModel.dart';
 import 'package:project_visen/service/database_helper.dart';
-
 import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:project_visen/controller/news.dart';
@@ -6,6 +7,10 @@ import 'package:project_visen/model/fetchCategory.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:project_visen/view/category.dart';
 import 'package:project_visen/view/detail.dart';
+import 'package:project_visen/view/profile.dart';
+import 'package:project_visen/view/search.dart';
+
+import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,6 +22,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late bool _loading;
   var newslist;
+  int _currentIndex = 0;
+  final _controller = TextEditingController();
+  String? text;
 
   List<CategoryModel> category = [];
 
@@ -59,6 +67,67 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        onTap: (value) {
+          if (value == 0) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomePage()));
+          } else if (value == 1) {
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => FavoritePage()));
+          } else if (value == 2) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfilePage()));
+          } else if (value == 3) {
+            AlertDialog alert = AlertDialog(
+              title: Text("Logout"),
+              content: Container(
+                child: Text("Apakah yakin ingin Logout?"),
+              ),
+              actions: [
+                TextButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                ),
+                TextButton(
+                    child: Text("Tidak"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            );
+            showDialog(context: context, builder: (context) => alert);
+          }
+          // Respond to item press.
+          setState(() => _currentIndex = value);
+        },
+        items: [
+          BottomNavigationBarItem(
+            title: Text('Home'),
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Search'),
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Profile'),
+            icon: Icon(Icons.person_outline_outlined),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Logout'),
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: SafeArea(
           child: _loading
               ? Center(
@@ -68,6 +137,41 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     child: Column(
                       children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            padding: EdgeInsets.all(1),
+                            child: Container(
+                              child: TextField(
+                                selectionHeightStyle: BoxHeightStyle.max,
+                                decoration: InputDecoration(
+                                  hintText: "Enter news title",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(7.0)),
+                                  filled: true,
+                                ),
+                                controller: _controller,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(1),
+                          child: Container(
+                              child: ElevatedButton(
+                                child: Text("Search"),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SearchPage(judul: _controller.text)),
+                                  );
+                                },
+                              )
+                          ),
+                        ),
                         //Category
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 16),
@@ -77,12 +181,14 @@ class _HomePageState extends State<HomePage> {
                               itemCount: category.length,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) => CategoryPage(
-                                          newsCategory: category[index].categorieName,
-                                        )
-                                    ));
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CategoryPage(
+                                                  newsCategory: category[index]
+                                                      .categorieName,
+                                                )));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(right: 14),
@@ -159,18 +265,24 @@ class _HomePageState extends State<HomePage> {
                                                 CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                             children: <Widget>[
-                                              ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                  child: Image.network(
-                                                    newslist[index].urlToImage,
-                                                    height: 200,
-                                                    width:
-                                                        MediaQuery.of(context)
+                                              Stack(
+                                                children: [
+                                                  ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                      child: Image.network(
+                                                        newslist[index]
+                                                            .urlToImage,
+                                                        height: 200,
+                                                        width: MediaQuery.of(
+                                                                context)
                                                             .size
                                                             .width,
-                                                    fit: BoxFit.cover,
-                                                  )),
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                ],
+                                              ),
                                               SizedBox(
                                                 height: 12,
                                               ),
@@ -192,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                                                 style: TextStyle(
                                                     color: Colors.black54,
                                                     fontSize: 14),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),

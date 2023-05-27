@@ -42,9 +42,38 @@ class NewsCategory {
   List<NewsArticle> news = [];
 
   Future<void> getNewsCategory(String category) async {
-    /*String url = "http://newsapi.org/v2/everything?q=$category&apiKey=${apiKey}";*/
     String url =
         "http://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=bad9385326564669afa286b3a7ab0d41";
+
+    var response = await http.get(url);
+
+    var jsonData = jsonDecode(response.body);
+
+    if (jsonData['status'] == "ok") {
+      jsonData["articles"].forEach((element) {
+        if (element['urlToImage'] != null && element['description'] != null) {
+          NewsArticle newsarticle = NewsArticle(
+            title: element['title'],
+            author: element['author'],
+            description: element['description'],
+            urlToImage: element['urlToImage'],
+            publshedAt: DateTime.parse(element['publishedAt']),
+            content: element["content"],
+            articleUrl: element["url"],
+          );
+          news.add(newsarticle);
+        }
+      });
+    }
+  }
+}
+
+class SearchNews {
+  List<NewsArticle> news = [];
+
+  Future<void> getSearch(String judul) async {
+    String url =
+        "https://newsapi.org/v2/everything?q=${judul}&apiKey=bad9385326564669afa286b3a7ab0d41";
 
     var response = await http.get(url);
 

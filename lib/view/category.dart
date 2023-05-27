@@ -3,6 +3,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:project_visen/controller/news.dart';
 import 'package:project_visen/view/detail.dart';
+import 'package:project_visen/view/profile.dart';
+
+import 'home.dart';
+import 'login_page.dart';
 
 class CategoryPage extends StatefulWidget {
   final String newsCategory;
@@ -15,6 +19,7 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   var newslist;
   bool _loading = true;
+  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -59,6 +64,67 @@ class _CategoryPageState extends State<CategoryPage> {
         ],
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        onTap: (value) {
+          if (value == 0) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => HomePage()));
+          } else if (value == 1) {
+            //Navigator.push(context,
+            //    MaterialPageRoute(builder: (context) => SearchPage()));
+          } else if (value == 2) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfilePage()));
+          } else if (value == 3) {
+            AlertDialog alert = AlertDialog(
+              title: Text("Logout"),
+              content: Container(
+                child: Text("Apakah yakin ingin Logout?"),
+              ),
+              actions: [
+                TextButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                ),
+                TextButton(
+                    child: Text("Tidak"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            );
+            showDialog(context: context, builder: (context) => alert);
+          }
+          // Respond to item press.
+          setState(() => _currentIndex = value);
+        },
+        items: [
+          BottomNavigationBarItem(
+            title: Text('Home'),
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Search'),
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Profile'),
+            icon: Icon(Icons.person_outline_outlined),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Logout'),
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: _loading
           ? Center(

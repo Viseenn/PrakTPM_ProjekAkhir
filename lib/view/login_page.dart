@@ -46,14 +46,14 @@ class _LoginPageState extends State<LoginPage> {
                       )),
                   Padding(
                     padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
                     child: Center(
                       child: usernameField(),
                     ),
                   ),
                   Padding(
                     padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
+                        const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
                     child: Center(
                       child: passwordField(),
                     ),
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
             enabledBorder: OutlineInputBorder(
               borderRadius: const BorderRadius.all(Radius.circular(50)),
               borderSide:
-              BorderSide(color: (isLogin) ? Colors.teal : Colors.red),
+                  BorderSide(color: (isLogin) ? Colors.teal : Colors.red),
             ),
             suffixIcon: GestureDetector(
               onTap: () {

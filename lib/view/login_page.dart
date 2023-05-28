@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   bool isHidden = true;
 
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(); //validasi form
 
   @override
   Widget build(BuildContext context) {

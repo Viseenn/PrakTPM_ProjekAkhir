@@ -59,15 +59,15 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  _favoriteAction(String title) async {
+  _favoriteAction(String articleUrl) async {
     setState(() {
       fav = !fav;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (fav) {
-      favoriteList.add(title);
+      favoriteList.add(articleUrl);
     } else {
-      favoriteList.remove(title);
+      favoriteList.remove(articleUrl);
     }
     prefs.setStringList("favorite", favoriteList);
     prefs.commit();
@@ -99,12 +99,12 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  _removeFavoriteAction(String title) async {
+  _removeFavoriteAction(String articleUrl) async {
     setState(() {
       fav = !fav;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    favoriteList.remove(title);
+    favoriteList.remove(articleUrl);
     prefs.setStringList("favorite", favoriteList);
     prefs.commit();
 
@@ -133,25 +133,25 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  _checkFavorite(String title) async {
+  _checkFavorite(String articleUrl) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? favorite = prefs.getStringList("favorite");
     if (favorite != null) {
       setState(() {
         favoriteList = favorite;
-        fav = favoriteList.contains(title);
+        fav = favoriteList.contains(articleUrl);
       });
     }
   }
 
-  _favButton(String title) {
-    _checkFavorite(title);
+  _favButton(String articleUrl) {
+    _checkFavorite(articleUrl);
     return IconButton(
       onPressed: () {
         if (fav) {
-          _removeFavoriteAction(title);
+          _removeFavoriteAction(articleUrl);
         } else {
-          _favoriteAction(title);
+          _favoriteAction(articleUrl);
         }
       },
       icon: Icon(

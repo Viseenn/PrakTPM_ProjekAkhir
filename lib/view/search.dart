@@ -55,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
             Text(
               "News",
               style:
-              TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             Text(
               "App",
@@ -64,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0.0,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -76,12 +76,9 @@ class _SearchPageState extends State<SearchPage> {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage()));
           } else if (value == 1) {
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => FavoritePage()));
-          } else if (value == 2) {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ProfilePage()));
-          } else if (value == 3) {
+          } else if (value == 2) {
             AlertDialog alert = AlertDialog(
               title: Text("Logout"),
               content: Container(
@@ -115,10 +112,6 @@ class _SearchPageState extends State<SearchPage> {
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-            title: Text('Search'),
-            icon: Icon(Icons.search),
-          ),
-          BottomNavigationBarItem(
             title: Text('Profile'),
             icon: Icon(Icons.person_outline_outlined),
           ),
@@ -131,191 +124,208 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
           child: _loading
               ? Center(
-            child: CircularProgressIndicator(),
-          )
+                  child: CircularProgressIndicator(),
+                )
               : SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Container(
-                      padding: EdgeInsets.all(1),
-                      child: Container(
-                        child: TextField(
-                          selectionHeightStyle: BoxHeightStyle.max,
-                          decoration: InputDecoration(
-                            hintText: "Enter news title",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7.0)),
-                            filled: true,
-                          ),
-                          controller: _controller,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(1),
-                    child: Container(
-                        child: ElevatedButton(
-                          child: Text("Search"),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => SearchPage(judul: _controller.text)),
-                            );
-                          },
-                        )
-                    ),
-                  ),
-                  //Category
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    height: 70,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: category.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CategoryPage(
-                                        newsCategory: category[index]
-                                            .categorieName,
-                                      )));
-                            },
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Container(
+                            padding: EdgeInsets.all(1),
                             child: Container(
-                              margin: EdgeInsets.only(right: 14),
-                              child: Stack(
-                                children: <Widget>[
-                                  ClipRRect(
-                                    borderRadius:
-                                    BorderRadius.circular(5),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                      category[index].imageAssetUrl,
-                                      height: 60,
-                                      width: 120,
-                                      fit: BoxFit.cover,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: EdgeInsets.all(1),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          hintText: "Enter news title",
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(7.0)),
+                                          filled: true,
+                                        ),
+                                        controller: _controller,
+                                      ),
                                     ),
                                   ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    height: 60,
-                                    width: 120,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(5),
-                                        color: Colors.black26),
-                                    child: Text(
-                                      category[index].categorieName,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500),
+                                  SizedBox(width: 10),
+                                  ElevatedButton(
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 300),
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue,
+                                      ),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
                                     ),
-                                  )
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SearchPage(
+                                              judul: _controller.text),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ],
                               ),
                             ),
-                          );
-                        }),
-                  ),
-                  //News
-                  Container(
-                    margin: EdgeInsets.only(top: 16),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        itemCount: newslist.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailPage(
-                                        articleUrl: newslist[index]
-                                            .articleUrl,
-                                      )));
-                            },
-                            child: Container(
-                                margin: EdgeInsets.only(bottom: 24),
-                                width: MediaQuery.of(context).size.width,
-                                child: Container(
+                          ),
+                        ),
+                        //Category
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          height: 70,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: category.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CategoryPage(
+                                                  newsCategory: category[index]
+                                                      .categorieName,
+                                                )));
+                                  },
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16),
-                                    alignment: Alignment.bottomCenter,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            bottomRight:
-                                            Radius.circular(6),
-                                            bottomLeft:
-                                            Radius.circular(6))),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
+                                    margin: EdgeInsets.only(right: 14),
+                                    child: Stack(
                                       children: <Widget>[
-                                        Stack(
-                                          children: [
-                                            ClipRRect(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    6),
-                                                child: Image.network(
-                                                  newslist[index]
-                                                      .urlToImage,
-                                                  height: 200,
-                                                  width: MediaQuery.of(
-                                                      context)
-                                                      .size
-                                                      .width,
-                                                  fit: BoxFit.cover,
-                                                )),
-                                          ],
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                category[index].imageAssetUrl,
+                                            height: 60,
+                                            width: 120,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 12,
-                                        ),
-                                        Text(
-                                          newslist[index].title,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontSize: 20,
-                                              fontWeight:
-                                              FontWeight.w500),
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        Text(
-                                          newslist[index].description,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              color: Colors.black54,
-                                              fontSize: 14),
-                                        ),
+                                        Container(
+                                          alignment: Alignment.center,
+                                          height: 60,
+                                          width: 120,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                              color: Colors.black26),
+                                          child: Text(
+                                            category[index].categorieName,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
-                                )),
-                          );
-                        }),
-                  )
-                ],
-              ),
-            ),
-          )),
+                                );
+                              }),
+                        ),
+                        //News
+                        Container(
+                          margin: EdgeInsets.only(top: 16),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: newslist.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => DetailPage(
+                                                  articleUrl: newslist[index]
+                                                      .articleUrl,
+                                                )));
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.only(bottom: 24),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Container(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 16),
+                                          alignment: Alignment.bottomCenter,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                  bottomRight:
+                                                      Radius.circular(6),
+                                                  bottomLeft:
+                                                      Radius.circular(6))),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: <Widget>[
+                                              Stack(
+                                                children: [
+                                                  ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                      child: Image.network(
+                                                        newslist[index]
+                                                            .urlToImage,
+                                                        height: 200,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: 12,
+                                              ),
+                                              Text(
+                                                newslist[index].title,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    color: Colors.black87,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              SizedBox(
+                                                height: 4,
+                                              ),
+                                              Text(
+                                                newslist[index].description,
+                                                maxLines: 2,
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 14),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )),
+                                );
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                )),
     );
   }
 }

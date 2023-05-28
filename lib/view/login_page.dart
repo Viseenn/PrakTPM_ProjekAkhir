@@ -14,8 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final username_controller = TextEditingController();
-  final password_controller = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
   bool isLogin = true;
   bool isHidden = true;
 
@@ -36,24 +36,25 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 children: [
                   Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Center(
-                        child: Image.asset(
-                          "assets/news.png",
-                          width: 300,
-                          height: 200,
-                        ),
-                      )),
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Center(
+                      child: Image.asset(
+                        "assets/news.png",
+                        width: 300,
+                        height: 200,
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
                     child: Center(
                       child: usernameField(),
                     ),
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 60),
                     child: Center(
                       child: passwordField(),
                     ),
@@ -96,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextFormField(
         enabled: true,
-        controller: username_controller,
+        controller: usernameController,
         decoration: InputDecoration(
           fillColor: Colors.teal,
           border: OutlineInputBorder(
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(50)),
-            borderSide: BorderSide(color: (isLogin) ? Colors.teal : Colors.red),
+            borderSide: BorderSide(color: isLogin ? Colors.teal : Colors.red),
           ),
           labelText: "Username",
         ),
@@ -122,49 +123,49 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget passwordField() {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: TextFormField(
-          enabled: true,
-          controller: password_controller,
-          obscureText: isHidden,
-          decoration: InputDecoration(
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              borderSide: BorderSide(color: Colors.teal),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(50)),
-              borderSide:
-                  BorderSide(color: (isLogin) ? Colors.teal : Colors.red),
-            ),
-            suffixIcon: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isHidden = !isHidden;
-                });
-              },
-              child: Icon(
-                isHidden ? Icons.visibility_off : Icons.visibility,
-                color: isHidden ? Colors.grey : Colors.blue,
-              ),
-            ),
-            labelText: 'Password',
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: TextFormField(
+        enabled: true,
+        controller: passwordController,
+        obscureText: isHidden,
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide(color: Colors.teal),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Password tidak boleh kosong";
-            }
-            return null;
-          },
-        ));
+          enabledBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
+            borderSide: BorderSide(color: isLogin ? Colors.teal : Colors.red),
+          ),
+          suffixIcon: GestureDetector(
+            onTap: () {
+              setState(() {
+                isHidden = !isHidden;
+              });
+            },
+            child: Icon(
+              isHidden ? Icons.visibility_off : Icons.visibility,
+              color: isHidden ? Colors.grey : Colors.blue,
+            ),
+          ),
+          labelText: 'Password',
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Password tidak boleh kosong";
+          }
+          return null;
+        },
+      ),
+    );
   }
 
   Widget loginButton() {
     return _submitButton(
       labelButton: "Login",
       submitCallback: (value) {
-        String currentUsername = username_controller.value.text;
-        String currentPassword = password_controller.value.text;
+        String currentUsername = usernameController.value.text;
+        String currentPassword = passwordController.value.text;
 
         prosesLogin(currentUsername, currentPassword);
       },
@@ -176,19 +177,21 @@ class _LoginPageState extends State<LoginPage> {
     required Function(String) submitCallback,
   }) {
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        width: MediaQuery.of(context).size.width,
-        child: ElevatedButton(
-          onPressed: () {
-            submitCallback(labelButton);
-          }, //prosesLogin,
-          child: const Text('Login'),
-          style: ElevatedButton.styleFrom(
-              minimumSize: const Size.fromHeight(40),
-              primary: (isLogin) ? Colors.teal : Colors.red,
-              onPrimary: Colors.white,
-              shape: StadiumBorder()),
-        ));
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      width: MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+        onPressed: () {
+          submitCallback(labelButton);
+        },
+        child: const Text('Login'),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(40),
+          primary: isLogin ? Colors.teal : Colors.red,
+          onPrimary: Colors.white,
+          shape: StadiumBorder(),
+        ),
+      ),
+    );
   }
 
   void prosesLogin(String username, String password) async {
@@ -207,13 +210,19 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     if (!found) {
-      String text = "Login Gagal";
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(text),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Gagal'),
+          content: const Text('Username atau password salah.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
         ),
       );
     } else {

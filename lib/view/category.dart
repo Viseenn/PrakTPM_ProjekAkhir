@@ -42,12 +42,12 @@ class _CategoryPageState extends State<CategoryPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Berita",
+              "News",
               style:
-                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             Text(
-              "Universe",
+              "App - " + "${widget.newsCategory}",
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
             )
           ],
@@ -62,7 +62,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 )),
           )
         ],
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         elevation: 0.0,
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -74,12 +74,9 @@ class _CategoryPageState extends State<CategoryPage> {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage()));
           } else if (value == 1) {
-            //Navigator.push(context,
-            //    MaterialPageRoute(builder: (context) => SearchPage()));
-          } else if (value == 2) {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => ProfilePage()));
-          } else if (value == 3) {
+          } else if (value == 2) {
             AlertDialog alert = AlertDialog(
               title: Text("Logout"),
               content: Container(
@@ -111,10 +108,6 @@ class _CategoryPageState extends State<CategoryPage> {
           BottomNavigationBarItem(
             title: Text('Home'),
             icon: Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            title: Text('Search'),
-            icon: Icon(Icons.search),
           ),
           BottomNavigationBarItem(
             title: Text('Profile'),

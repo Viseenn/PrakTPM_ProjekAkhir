@@ -26,12 +26,17 @@ class Anggota {
 
 final daftarAnggota = [
   Anggota(
-      nama: 'Giventheo Khemides',
-      nim: '123200063',
-      plug: 'C',
-      foto: 'assets/man.png'),
+    nama: 'Giventheo Khemides',
+    nim: '123200063',
+    plug: 'C',
+    foto: 'assets/man.png',
+  ),
   Anggota(
-      nama: 'Visen', nim: '123200129', plug: 'C', foto: 'assets/person.png'),
+    nama: 'Visen',
+    nim: '123200129',
+    plug: 'C',
+    foto: 'assets/person.png',
+  ),
 ];
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -40,137 +45,128 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Profile',
-          ),
-          centerTitle: true,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: 2,
-          selectedItemColor: Colors.blue,
-          onTap: (value) {
-            if (value == 0) {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
-            } else if (value == 1) {
-              //Navigator.push(context,
-              //    MaterialPageRoute(builder: (context) => SearchPage()));
-            } else if (value == 2) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => ProfilePage()));
-            } else if (value == 3) {
-              AlertDialog alert = AlertDialog(
-                title: Text("Logout"),
-                content: Container(
-                  child: Text("Apakah yakin ingin Logout?"),
+      appBar: AppBar(
+        title: Text('Profile'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.black,
+        elevation: 0.0,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 1,
+        selectedItemColor: Colors.blue,
+        onTap: (value) {
+          if (value == 0) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => HomePage()));
+          } else if (value == 1) {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ProfilePage()));
+          } else if (value == 2) {
+            AlertDialog alert = AlertDialog(
+              title: Text("Logout"),
+              content: Container(
+                child: Text("Apakah yakin ingin Logout?"),
+              ),
+              actions: [
+                TextButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
                 ),
-                actions: [
-                  TextButton(
-                    child: Text("Yes"),
+                TextButton(
+                    child: Text("Tidak"),
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                    },
-                  ),
-                  TextButton(
-                      child: Text("Tidak"),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
-                ],
-              );
-              showDialog(context: context, builder: (context) => alert);
-            }
-            // Respond to item press.
-            setState(() => _currentIndex = value);
-          },
-          items: [
-            BottomNavigationBarItem(
-              title: Text('Home'),
-              icon: Icon(Icons.home),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Search'),
-              icon: Icon(Icons.search),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Profile'),
-              icon: Icon(Icons.person_outline_outlined),
-            ),
-            BottomNavigationBarItem(
-              title: Text('Logout'),
-              icon: Icon(Icons.logout),
-            ),
-          ],
-        ),
-        body: Center(
-            child: Card(
-                margin: const EdgeInsets.all(16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: daftarAnggota.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final anggota = daftarAnggota[index];
-                      return Column(
+                      Navigator.of(context).pop();
+                    }),
+              ],
+            );
+            showDialog(context: context, builder: (context) => alert);
+          }
+          // Respond to item press.
+          setState(() => _currentIndex = value);
+        },
+        items: [
+          BottomNavigationBarItem(
+            title: Text('Home'),
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Profile'),
+            icon: Icon(Icons.person_outline_outlined),
+          ),
+          BottomNavigationBarItem(
+            title: Text('Logout'),
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView.builder(
+          itemCount: daftarAnggota.length,
+          itemBuilder: (BuildContext context, int index) {
+            final anggota = daftarAnggota[index];
+            return Card(
+              margin: EdgeInsets.symmetric(vertical: 8.0),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage(anggota.foto),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 16.0),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 120,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: AssetImage(anggota.foto),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 16.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      anggota.nama,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8.0),
-                                    Text(
-                                      'NIM: ${anggota.nim}',
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16.0),
-                                    Text(
-                                      'Plug: ${anggota.plug}',
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16.0),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Text(
+                            anggota.nama,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          const SizedBox(height: 16.0),
+                          SizedBox(height: 8.0),
+                          Text(
+                            'NIM: ${anggota.nim}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
+                          Text(
+                            'Plug: ${anggota.plug}',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
                         ],
-                      );
-                    },
-                  ),
-                ))));
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

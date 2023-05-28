@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:project_visen/model/fetchAPI.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -15,8 +14,15 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
+  List<String> favoriteList = [];
   bool fav = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavorite(widget.articleUrl);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,19 +32,17 @@ class _DetailPageState extends State<DetailPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Berita",
+              "News",
               style:
-              TextStyle(color: Colors.black87, fontWeight: FontWeight.w600),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
             Text(
-              "Universe",
+              "App",
               style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
             )
           ],
         ),
-        actions: [
-          _favButton(widget.articleUrl.toString())
-        ],
+        actions: [_favButton(widget.articleUrl.toString())],
         backgroundColor: Colors.black,
         elevation: 0.0,
       ),
@@ -55,13 +59,17 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  _favoriteAction(String articleUrl) async {
+  _favoriteAction(String title) async {
     setState(() {
       fav = !fav;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setStringList(
-        "favorite", [articleUrl, fav.toString()]);
+    if (fav) {
+      favoriteList.add(title);
+    } else {
+      favoriteList.remove(title);
+    }
+    prefs.setStringList("favorite", favoriteList);
     prefs.commit();
 
     if (fav) {
@@ -73,10 +81,10 @@ class _DetailPageState extends State<DetailPage> {
               children: [
                 Icon(Icons.favorite, color: Colors.red),
                 SizedBox(width: 8.0),
-                Text('Article Favorited'),
+                Text('News Favorited'),
               ],
             ),
-            content: Text('The article has been added to your favorites.'),
+            content: Text('The news has been added to your favorites.'),
             actions: <Widget>[
               TextButton(
                 child: Text('OK'),
@@ -91,23 +99,60 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
-  _checkFavorite(String articleUrl) async {
+  _removeFavoriteAction(String title) async {
+    setState(() {
+      fav = !fav;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    favoriteList.remove(title);
+    prefs.setStringList("favorite", favoriteList);
+    prefs.commit();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.favorite_border, color: Colors.white),
+              SizedBox(width: 8.0),
+              Text('News Removed'),
+            ],
+          ),
+          content: Text('The news has been removed from your favorites.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _checkFavorite(String title) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? favorite = prefs.getStringList("favorite");
     if (favorite != null) {
-      if (favorite[1] == "true" && articleUrl == favorite[0]) {
-        setState(() {
-          fav = true;
-        });
-      }
+      setState(() {
+        favoriteList = favorite;
+        fav = favoriteList.contains(title);
+      });
     }
   }
 
-  _favButton(String articleUrl) {
-    _checkFavorite(articleUrl);
+  _favButton(String title) {
+    _checkFavorite(title);
     return IconButton(
       onPressed: () {
-        _favoriteAction(articleUrl);
+        if (fav) {
+          _removeFavoriteAction(title);
+        } else {
+          _favoriteAction(title);
+        }
       },
       icon: Icon(
         fav ? Icons.favorite : Icons.favorite_border,
@@ -115,5 +160,4 @@ class _DetailPageState extends State<DetailPage> {
       ),
     );
   }
-
 }
